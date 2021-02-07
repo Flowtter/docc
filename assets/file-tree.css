@@ -13,81 +13,80 @@
 
 .file-list,
 .file-list ul {
-  list-style-type: none;
-  font-size: 1em;
-  line-height: 1.8em;
-  margin-left: 5px;
-  padding-left: 10px;
-  border-left: 1px dotted var(--grey);
+    list-style-type: none;
+    font-size: 1em;
+    line-height: 1.8em;
+    margin-left: 5px;
+    padding-left: 10px;
+    border-left: 1px dotted var(--grey);
 }
+
 .file-list li {
-  position: relative;
-  padding-left: 5px;
+    position: relative;
+    padding-left: 5px;
 }
 
 .file-list li span {
-  text-decoration: none;
-  cursor: pointer;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .file-list li span:before {
-  display: block;
-  content: ' ';
-  width: 10px;
-  height: 1px;
-  position: absolute;
-  border-bottom: 1px dotted var(--grey);
-  top: 0.8em;
-  left: -8px;
-}
-.file-list li:before {
-  list-style-type: none;
-  font-family: FontAwesome;
-  display: block;
-  content: url('../icons/file.svg');
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 1.3em;
-  color: #555;
-}
-.file-list .folder-root {
-  list-style-type: none;
+    display: block;
+    content: ' ';
+    width: 10px;
+    height: 1px;
+    position: absolute;
+    border-bottom: 1px dotted var(--grey);
+    top: 0.8em;
+    left: -8px;
 }
 
-.file-list .folder-root:before {
-  content: url('./icons/folder_close.svg');
+.file-list li:before {
+    list-style-type: none;
+    font-family: FontAwesome;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 1.3em;
+    color: #555;
 }
-.file-list .folder-root.open:before {
-  content: url('./icons/folder_open.svg');
+
+.file-list .folder-root {
+    list-style-type: none;
 }
+
 li.folder-root ul {
-  transition: all 0.2s ease-in-out;
-  overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
 }
-li.folder-root.closed > ul {
-  opacity: 0;
-  max-height: 0;
+
+li.folder-root.closed>ul {
+    display: none;
+    max-height: 0;
 }
-li.folder-root.open > ul {
-  opacity: 1;
-  display: block;
-  max-height: 1000px;
+
+li.folder-root.open>ul {
+    display: block;
+    max-height: 100%
 }
+
 @media screen and (max-width: 1024px) and (min-width: 768px) {
-  .file-list,
-  .file-list ul {
-    margin-left: 3px;
-    padding-left: 13px;
-  }
+    .file-list,
+    .file-list ul {
+        margin-left: 3px;
+        padding-left: 13px;
+    }
 }
 
 .file {
     padding: 0px !important;
+    padding-right: 20px !important;
     margin-left: 0px !important;
-    color : var(--blue) !important;
+    color: var(--blue) !important;
     font-size: 1em !important;
     line-height: 1.8em !important;
 }

@@ -7,6 +7,7 @@ import (
 	"text/template"
 )
 
+// PageData struct for html info
 type PageData struct {
 	PageTitle   string
 	FolderTitle string
@@ -14,16 +15,19 @@ type PageData struct {
 	Functions   []Function
 }
 
+// Folder for the left menu
 type Folder struct {
 	Name       string
 	Files      []File
 	SubFolders []Folder
 }
 
+// File for the left menu
 type File struct {
-	Path string
-	HREF string
-	Slug string
+	Path  string
+	HREF  string
+	Slug  string
+	First bool
 }
 
 func parseHTML(pageData PageData, pathToSave, pathFunctionFile string) {

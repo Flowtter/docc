@@ -1,60 +1,62 @@
 <!DOCTYPE html>
 <html>
-    {{ define "folder" }}
-        <li>
-            <span class="folder-name">{{ .Name }}</span>
-            <ul>
-                {{range .Files}}
-                    <li><a class="file" href="{{.HREF}}">{{.Slug}}</a></li>
-                {{end}}
-                {{ if gt (len .SubFolders) 0}}
-                        {{ range .SubFolders }}
-                        {{ template "folder" . }}
-                        {{ end }}
-                {{ end }}
-            </ul>
-        </li>
-    {{ end }}
-    <head>
-        <meta charset="utf-8"/>
-        <title>{{.PageTitle}}</title>
-        <link href="https://fonts.googleapis.com/css?family=Poppins:wght@300,400&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="prism.css"/>
-        <link rel="stylesheet" href="style.css"/>
-        <link rel="stylesheet" type="text/css" href="file-tree.css" />
+{{ define "folder" }}
+<li>
+    <span class="folder-name">{{ .Name }}</span>
+    <ul>
+        {{ if gt (len .SubFolders) 0}} {{ range .SubFolders }} {{ template "folder" . }} {{ end }} {{ end }} {{range .Files}}
+        <li><a class="file" href="{{.HREF}}">{{.Slug}}</a></li>
+        {{end}}
+    </ul>
+</li>
+{{ end }}
 
-        <script src="prism.js"></script>
-        <script src="file-tree.js"></script>
-        <script type="text/javascript">
-          window.onload = function() {
+<head>
+    <meta charset="utf-8" />
+    <title>{{.PageTitle}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:wght@300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="prism.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="file-tree.css" />
+
+    <script src="prism.js"></script>
+    <script src="file-tree.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
             // passing element id to fileTree
             fileTree('file-tree');
-          };
-        </script>        
-    </head>
-    <body>
-        <div class="line">
-            <a href="index.html">{{.PageTitle}}</a>
-            <a>{{.FolderTitle}}</a>
+        };
+    </script>
+</head>
+
+<body>
+    <div class="line">
+        <a href="index.html">{{.PageTitle}}</a>
+        <a>{{.FolderTitle}}</a>
+    </div>
+    <div class="menu-content-container">
+        <div class="left-menu">
+            <ul id="file-tree" class="file-tree">
+                {{ template "folder" .MainFolder}}
+            </ul>
         </div>
-        <div class="menu-content-container">
-            <div class="left-menu">
-                <ul id="file-tree" class="file-tree">
-                    {{ template "folder" .MainFolder}}
-                </ul>
+        <div class="content">
+            {{range .Functions}}
+            <div class="function-container">
+                <div class="prototype-container">
+                    <pre><code class="language-c prototype">{{.Prototype}}</code></pre>
+                    <div class="line-function">{{.Line}}</div>
+                </div>
+                <div class="path">
+                    <pre><code class="language-c">{{.Path}}</code></pre>
+                </div>
+                <div class="language-c description">
+                    <pre><code class="language-c">{{.Description}}</code></pre>
+                </div>
             </div>
-            <div class="content">
-                {{range .Functions}}
-                    <div class="function-container">
-                        <div class="prototype-container">
-                            <pre><code class="language-c prototype">{{.Prototype}}</code></pre>
-                            <div class="line-function">{{.Line}}</div>
-                        </div>
-                        <div class="path"><pre><code class="language-c">{{.Path}}</code></pre></div>
-                        <div class="language-c description"><pre><code class="language-c">{{.Description}}</code></pre></div>
-                    </div>
-                {{end}}
-            </div>
-        </div>  
-    </body>
+            {{end}}
+        </div>
+    </div>
+</body>
+
 </html>

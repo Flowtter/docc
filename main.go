@@ -20,7 +20,8 @@ func init() {
 	zap.ReplaceGlobals(logger)
 }
 
-// TODO: folders
+// TODO: open one folder
+// TODO: slugify path
 // TODO: online (arg local)
 // Todo: readme
 func main() {
