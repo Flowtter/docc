@@ -1,0 +1,119 @@
+/* PrismJS 1.23.0
+https://prismjs.com/download.html#themes=prism-dark&languages=markup+css+clike+javascript */
+/**
+ * prism.js Dark theme for JavaScript, CSS and HTML
+ * Based on the slides of the talk “/Reg(exp){2}lained/”
+ * @author Lea Verou
+ */
+
+ :root {
+    --height: 75px;
+    --width: 300px;
+    --rectanglew: 20.5em;
+    --rectangleh: 20.5em;
+    --black: #101010;
+    --dark-grey: #1e272e;
+    --grey: #3d4449;
+    --white: #f9fbff;
+    --blue-navi: #3c40c6;
+    --blue: #3498db;
+}
+
+ code[class*="language-"],
+ pre[class*="language-"] {
+     color: var(--white);
+     background: none;
+     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+     font-size: 1em;
+     text-align: left;
+     white-space: pre;
+     word-spacing: normal;
+     word-break: normal;
+     word-wrap: normal;
+     line-height: 1.5;
+ 
+     -moz-tab-size: 4;
+     -o-tab-size: 4;
+     tab-size: 4;
+ 
+     -webkit-hyphens: none;
+     -moz-hyphens: none;
+     -ms-hyphens: none;
+     hyphens: none;
+ }
+ 
+ @media print {
+     code[class*="language-"],
+     pre[class*="language-"] {
+         text-shadow: none;
+     }
+ }
+ 
+ 
+ /* Code blocks */
+ pre[class*="language-"] {
+     padding: 1em;
+     margin: .5em 0;
+     overflow: auto;
+ }
+ 
+ /* Inline code */
+ :not(pre) > code[class*="language-"] {
+     padding: .15em .2em .05em;
+     white-space: normal;
+ }
+ 
+ .token.comment,
+ .token.prolog,
+ .token.doctype,
+ .token.cdata {
+     color: hsl(30, 20%, 50%);
+ }
+ 
+ .token.property,
+ .token.tag,
+ .token.boolean,
+ .token.number,
+ .token.constant,
+ .token.symbol {
+     color: red;
+ }
+ 
+ 
+ .token.operator,
+ .token.entity,
+ .token.url,
+ .language-css .token.string,
+ .style .token.string,
+ .token.variable {
+     color: var(--blue);
+ }
+ 
+ .token.atrule,
+ .token.attr-value,
+ .token.keyword {
+     color: var(--blue)
+ }
+ 
+ .token.regex,
+ .token.important {
+     color: #e90;
+ }
+ 
+ .token.important,
+ .token.bold {
+     font-weight: bold;
+ }
+ .token.italic {
+     font-style: italic;
+ }
+ 
+ .token.entity {
+     cursor: help;
+ }
+ 
+ .token.deleted {
+     color: red;
+ }
+ 
+ 

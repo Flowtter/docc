@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>{{.PageTitle}}</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:wght@300,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="prism.css"/>
+        <link rel="stylesheet" href="style.css"/>
+        <script src="prism.js"></script>
+    </head>
+
+    <body>
+        <div class="line">
+            <a href="index.html">{{.PageTitle}}</a>
+            <a>{{.FolderTitle}}</a>
+        </div>
+        <div class="menu-content-container">
+            <div class="left-menu">
+                {{range .Folders}}
+                    <a class="button-folder" href="{{.NameHTML}}">{{.Name}}</a>
+                {{end}}
+            </div>
+            <div class="content">
+                {{range .Functions}}
+                    <div class="function-container">
+                        <div class="prototype-container">
+                            <pre><code class="language-c prototype">{{.Prototype}}</code></pre>
+                            <div class="line-function">{{.Line}}</div>
+                        </div>
+                        <div class="path">{{.Path}}</div>
+                        <div class="language-c description"><pre><code class="language-c">{{.Description}}</code></pre></div>
+                    </div>
+                {{end}}
+            </div>
+        </div>  
+
+    </body>
+</html>
