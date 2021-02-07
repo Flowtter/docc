@@ -49,12 +49,7 @@ func parseFiles(files, filesPath []string, folderPath string) {
 	}
 	_, pageTitle := path.Split(wd)
 
-	for i := 0; i < len(files); i++ {
-		folders = append(folders, Folder{
-			Name:     files[i],
-			NameHTML: strings.ReplaceAll(files[i]+".html", "/", "-"),
-		})
-	}
+	folders = getFolders(files)
 
 	wd = path.Join(wd, folderPath)
 

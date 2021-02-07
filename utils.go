@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"unicode/utf8"
 )
@@ -57,11 +59,11 @@ func getAllLinesOfFile(path string) []string {
 	return strings.Split(strings.ReplaceAll(string(file), "\r", ""), "\n")
 }
 
-func getAllFiles(folder string) []string {
+func getAllFilesOrFolder(folder string, wantFile bool) []string {
 	var files []string
 
 	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
-		if !isFolder(path) {
+		if wantFile == !isFolder(path) {
 			files = append(files, path)
 		}
 		return nil
@@ -82,7 +84,7 @@ func isFolder(folder string) bool {
 
 // debug
 func getAllFilesAndTrim(folder string) []string {
-	files := getAllFiles(folder)
+	files := getAllFilesOrFolder(folder, true)
 	trimAllFiles(folder, files)
 	return files
 }
@@ -202,4 +204,34 @@ func getAllFunctionsOfLines(lines []string, path string) []Function {
 		}
 	}
 	return functions
+}
+
+func openBrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		panic(err)
+	}
+}
+
+func getFolders(files []string) []Folder {
+	var folders []Folder
+	for i := 0; i < len(files); i++ {
+		folders = append(folders, Folder{
+			Name:     files[i],
+			NameHTML: strings.ReplaceAll(files[i]+".html", "/", "-"),
+		})
+	}
+
+	fmt.Println(folders)
+
+	return folders
 }

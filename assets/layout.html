@@ -6,8 +6,18 @@
         <link href="https://fonts.googleapis.com/css?family=Poppins:wght@300,400&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="prism.css"/>
         <link rel="stylesheet" href="style.css"/>
+        <link rel="stylesheet" type="text/css" href="file-tree.css" />
+
         <script src="prism.js"></script>
+        <script src="file-tree.js"></script>
+        <script type="text/javascript">
+          window.onload = function() {
+            // passing element id to fileTree
+            fileTree('file-tree');
+          };
+        </script>        
     </head>
+
 
     <body>
         <div class="line">
@@ -27,7 +37,7 @@
                             <pre><code class="language-c prototype">{{.Prototype}}</code></pre>
                             <div class="line-function">{{.Line}}</div>
                         </div>
-                        <div class="path">{{.Path}}</div>
+                        <div class="path"><pre><code class="language-c">{{.Path}}</code></pre></div>
                         <div class="language-c description"><pre><code class="language-c">{{.Description}}</code></pre></div>
                     </div>
                 {{end}}
