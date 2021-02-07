@@ -136,3 +136,23 @@ body {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
 }
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: var(--grey);
+}
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--dark-grey);
+}
+
+::-webkit-scrollbar-corner { 
+    background:var(--grey);
+}
