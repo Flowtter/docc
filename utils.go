@@ -5,10 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/gosimple/slug"
 )
 
 type Function struct {
@@ -16,14 +19,6 @@ type Function struct {
 	Description string
 	Path        string
 	Line        int
-}
-
-func printFunction(fun Function) {
-	fmt.Println("Function in", fun.Path)
-	fmt.Println("At line", fun.Line)
-	fmt.Println(fun.Prototype)
-	fmt.Println(fun.Description)
-	fmt.Println()
 }
 
 func createFoldersIfDoesNotExist(folder string) bool {
@@ -80,19 +75,6 @@ func isFolder(folder string) bool {
 		return false
 	}
 	return file.Mode().IsDir()
-}
-
-// debug
-func getAllFilesAndTrim(folder string) []string {
-	files := getAllFilesOrFolder(folder, true)
-	trimAllFiles(folder, files)
-	return files
-}
-
-func trimAllFiles(trim string, files []string) {
-	for i := 0; i < len(files); i++ {
-		files[i] = strings.ReplaceAll(files[i], trim, "")
-	}
 }
 
 func containsStringInMultipleLines(endingLineIndex int, startingString string, lines []string) (int, string) {
@@ -165,7 +147,6 @@ func postProcessingDescription(comment string) string {
 	return strings.Join(split, "\n")
 }
 
-// NETWORK : network_sgd
 func getAllFunctionsOfLines(lines []string, path string) []Function {
 	var functions []Function
 	for index, line := range lines {
@@ -222,16 +203,44 @@ func openBrowser(url string) {
 	}
 }
 
-func getFolders(files []string) []Folder {
-	var folders []Folder
-	for i := 0; i < len(files); i++ {
-		folders = append(folders, Folder{
-			Name:     files[i],
-			NameHTML: strings.ReplaceAll(files[i]+".html", "/", "-"),
-		})
+func folderMaker(path string) Folder {
+	folder := Folder{
+		Name: path,
 	}
+	folder.getFoldersRecursive(path)
+	return folder
+}
 
-	fmt.Println(folders)
+func (f *Folder) getFoldersRecursive(pth string) {
+	all, err := ioutil.ReadDir(pth)
+	if err != nil {
+		panic(err)
+	}
+	for i := 0; i < len(all); i++ {
+		if all[i].IsDir() {
+			folder := Folder{
+				Name: all[i].Name(),
+			}
+			folder.getFoldersRecursive(path.Join(pth, all[i].Name()))
+			f.SubFolders = append(f.SubFolders, folder)
+		} else {
+			joined := path.Join(pth, all[i].Name())
+			f.Files = append(f.Files, File{
+				Slug: slug.Make(all[i].Name())[:len(all[i].Name())-2],
+				HREF: slug.Make(all[i].Name())[:len(all[i].Name())-2] + ".html",
+				Path: joined,
+			})
+		}
+	}
+}
 
-	return folders
+func getName(files []string) []string {
+	var name []string
+	for i := 0; i < len(files); i++ {
+		tmpName := files[i]
+		_, tmpName = path.Split(tmpName)
+		tmpName = tmpName[:len(tmpName)-2]
+		name = append(name, tmpName)
+	}
+	return name
 }

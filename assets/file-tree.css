@@ -1,15 +1,28 @@
+:root {
+    --height: 75px;
+    --width: 300px;
+    --rectanglew: 20.5em;
+    --rectangleh: 20.5em;
+    --black: #101010;
+    --dark-grey: #1e272e;
+    --grey: #3d4449;
+    --white: #f9fbff;
+    --blue-navi: #3c40c6;
+    --blue: #3498db;
+}
+
 .file-list,
 .file-list ul {
   list-style-type: none;
   font-size: 1em;
   line-height: 1.8em;
-  margin-left: 20px;
-  padding-left: 18px;
-  border-left: 1px dotted #aaa;
+  margin-left: 5px;
+  padding-left: 10px;
+  border-left: 1px dotted var(--grey);
 }
 .file-list li {
   position: relative;
-  padding-left: 25px;
+  padding-left: 5px;
 }
 
 .file-list li span {
@@ -23,9 +36,9 @@
   width: 10px;
   height: 1px;
   position: absolute;
-  border-bottom: 1px dotted #aaa;
-  top: 0.6em;
-  left: -14px;
+  border-bottom: 1px dotted var(--grey);
+  top: 0.8em;
+  left: -8px;
 }
 .file-list li:before {
   list-style-type: none;
@@ -69,4 +82,12 @@ li.folder-root.open > ul {
     margin-left: 3px;
     padding-left: 13px;
   }
+}
+
+.file {
+    padding: 0px !important;
+    margin-left: 0px !important;
+    color : var(--blue) !important;
+    font-size: 1em !important;
+    line-height: 1.8em !important;
 }

@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html>
+    {{ define "folder" }}
+        <li>
+            <span class="folder-name">{{ .Name }}</span>
+            <ul>
+                {{range .Files}}
+                    <li><a class="file" href="{{.HREF}}">{{.Slug}}</a></li>
+                {{end}}
+                {{ if gt (len .SubFolders) 0}}
+                        {{ range .SubFolders }}
+                        {{ template "folder" . }}
+                        {{ end }}
+                {{ end }}
+            </ul>
+        </li>
+    {{ end }}
     <head>
         <meta charset="utf-8"/>
         <title>{{.PageTitle}}</title>
@@ -17,8 +32,6 @@
           };
         </script>        
     </head>
-
-
     <body>
         <div class="line">
             <a href="index.html">{{.PageTitle}}</a>
@@ -26,9 +39,9 @@
         </div>
         <div class="menu-content-container">
             <div class="left-menu">
-                {{range .Folders}}
-                    <a class="button-folder" href="{{.NameHTML}}">{{.Name}}</a>
-                {{end}}
+                <ul id="file-tree" class="file-tree">
+                    {{ template "folder" .MainFolder}}
+                </ul>
             </div>
             <div class="content">
                 {{range .Functions}}
@@ -43,6 +56,5 @@
                 {{end}}
             </div>
         </div>  
-
     </body>
 </html>

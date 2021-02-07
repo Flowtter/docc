@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 
 	"go.uber.org/zap"
@@ -27,20 +25,6 @@ func init() {
 // Todo: readme
 func main() {
 
-	err := filepath.Walk("include",
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			fmt.Println(path)
-			return nil
-		})
-	if err != nil {
-		log.Println(err)
-	}
-
-	panic("hihi")
-
 	args := os.Args[1:]
 
 	var folder string = "html-docc"
@@ -49,48 +33,31 @@ func main() {
 		panic("no include folder")
 	}
 
-	var filesToCopy []string = []string{"prism.css", "prism.js", "style.css"}
+	var filesToCopy []string = []string{"prism.css", "prism.js", "style.css", "file-tree.css", "file-tree.js"}
 
 	for i := 0; i < len(filesToCopy); i++ {
 		copyFile(path.Join("assets", filesToCopy[i]), path.Join(folder, filesToCopy[i]))
 	}
 
 	var files []string = getAllFilesOrFolder("include", true)
-	var filesPath []string = make([]string, len(files))
-	copy(filesPath, files)
+	var filesName []string = getName(files)
 
-	trimAllFiles("include/", files)
-	trimAllFiles(".h", files)
-	parseFiles(files, filesPath, folder)
+	var mainFolder Folder = folderMaker("include")
 
-	fmt.Println(getAllFilesOrFolder("include", false))
+	for i := 0; i < len(files); i++ {
+		parseFiles(filesName[i], files[i], mainFolder)
+	}
 
-	indexHTML(files, folder)
+	parseFiles("index", "index.html", mainFolder)
 
 	if len(args) > 0 {
 		argsString := strings.Join(args, "")
 		if strings.Contains(argsString, "help") {
 			fmt.Println(`Welcome to docc,
 	-help: displays help
-	-l: launches the index.html
-	-e: opens the index.html`)
+	-l: launches the index.html`)
 		} else if strings.Contains(argsString, "l") {
 			openBrowser("html-docc/index.html")
-			// } else if strings.Contains(argsString, "e") {
-
-			// 	wd, err := os.Getwd()
-
-			// 	if err != nil {
-			// 		panic(err)
-			// 	}
-			// 	fmt.Println("explorer.exe", path.Join(wd, "html-doc"))
-			// 	cmd := exec.Command("explorer.exe " + path.Join(wd, "html-doc"))
-
-			// 	err = cmd.Run()
-
-			// 	if err != nil {
-			// 		log.Fatal(err)
-			// 	}
 		} else {
 			fmt.Println("Unknown command maybe you should try using the help command")
 		}

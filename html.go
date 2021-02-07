@@ -1,35 +1,39 @@
 package main
 
 import (
-	"html/template"
 	"os"
 	"path"
 	"strings"
+	"text/template"
 )
 
 type PageData struct {
 	PageTitle   string
 	FolderTitle string
-	PathFile    string
-	Folders     []Folder
+	MainFolder  Folder
 	Functions   []Function
 }
 
 type Folder struct {
-	Name     string
-	NameHTML string
+	Name       string
+	Files      []File
+	SubFolders []Folder
 }
 
-func parseHTML(pageData PageData, wd string) {
-	tmpl := template.Must(template.ParseFiles(path.Join("assets", "layout.html")))
-	// todo : explode path
-	pathFile := strings.ReplaceAll(pageData.FolderTitle+".html", "/", "-")
+type File struct {
+	Path string
+	HREF string
+	Slug string
+}
 
-	lines := getAllLinesOfFile(pageData.PathFile)
+func parseHTML(pageData PageData, pathToSave, pathFunctionFile string) {
+	tmpl := template.Must(template.ParseFiles(path.Join("assets", "layout.html")))
+
+	lines := getAllLinesOfFile(pathFunctionFile)
 	if pageData.FolderTitle != "index" {
-		pageData.Functions = getAllFunctionsOfLines(lines, pageData.PathFile)
+		pageData.Functions = getAllFunctionsOfLines(lines, pathFunctionFile)
 	}
-	f, err := os.Create(path.Join(wd, pathFile))
+	f, err := os.Create(pathToSave)
 	defer f.Close()
 	if err != nil {
 		panic(err)
@@ -40,54 +44,18 @@ func parseHTML(pageData PageData, wd string) {
 	}
 }
 
-func parseFiles(files, filesPath []string, folderPath string) {
-	var folders []Folder
+func parseFiles(name, pathFunctionFile string, mainFolder Folder) {
 	wd, err := os.Getwd()
 
 	if err != nil {
 		panic(err)
 	}
 	_, pageTitle := path.Split(wd)
-
-	folders = getFolders(files)
-
-	wd = path.Join(wd, folderPath)
-
-	for i := 0; i < len(files); i++ {
-		pageData := PageData{
-			PageTitle:   strings.ToUpper(pageTitle),
-			FolderTitle: folders[i].Name,
-			Folders:     folders,
-			PathFile:    filesPath[i],
-		}
-		parseHTML(pageData, wd)
-	}
-}
-
-func indexHTML(files []string, folderPath string) {
-	var folders []Folder
-	wd, err := os.Getwd()
-
-	if err != nil {
-		panic(err)
-	}
-
-	_, pageTitle := path.Split(wd)
-
-	for i := 0; i < len(files); i++ {
-		folders = append(folders, Folder{
-			Name:     files[i],
-			NameHTML: strings.ReplaceAll(files[i]+".html", "/", "-"),
-		})
-	}
-
-	wd = path.Join(wd, folderPath)
 
 	pageData := PageData{
 		PageTitle:   strings.ToUpper(pageTitle),
-		FolderTitle: "index",
-		Folders:     folders,
-		PathFile:    "index.html",
+		FolderTitle: pathFunctionFile,
+		MainFolder:  mainFolder,
 	}
-	parseHTML(pageData, wd)
+	parseHTML(pageData, path.Join(wd, "html-docc", name+".html"), pathFunctionFile)
 }
