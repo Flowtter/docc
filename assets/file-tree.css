@@ -18,7 +18,6 @@
     line-height: 1.8em;
     margin-left: 5px;
     padding-left: 10px;
-    border-left: 1px dotted var(--grey);
 }
 
 .file-list li {
@@ -52,7 +51,6 @@
     width: 20px;
     height: 20px;
     font-size: 1.3em;
-    color: #555;
 }
 
 .file-list .folder-root {
