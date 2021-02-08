@@ -23,8 +23,6 @@ func init() {
 	zap.ReplaceGlobals(logger)
 }
 
-// TODO: online (arg local)
-// TODO: readme
 // TODO: filetree reset
 func main() {
 
