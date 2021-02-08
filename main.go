@@ -6,6 +6,9 @@ import (
 	"path"
 	"strings"
 
+	"github.com/Flowtter/docc/function"
+	"github.com/Flowtter/docc/utils"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -20,35 +23,35 @@ func init() {
 	zap.ReplaceGlobals(logger)
 }
 
-// TODO: slugify path
 // TODO: online (arg local)
-// Todo: readme
+// TODO: readme
+// TODO: filetree reset
 func main() {
 
 	args := os.Args[1:]
 
 	var folder string = "html-docc"
-	createFoldersIfDoesNotExist(folder)
-	if !verifyFolders("include") {
+	utils.CreateFoldersIfDoesNotExist(folder)
+	if !utils.VerifyFolders("include") {
 		panic("no include folder")
 	}
 
 	var filesToCopy []string = []string{"prism.css", "prism.js", "style.css", "file-tree.css", "file-tree.js"}
 
 	for i := 0; i < len(filesToCopy); i++ {
-		copyFile(path.Join("assets", filesToCopy[i]), path.Join(folder, filesToCopy[i]))
+		utils.CopyFile(path.Join("assets", filesToCopy[i]), path.Join(folder, filesToCopy[i]))
 	}
 
-	var files []string = getAllFilesOrFolder("include", true)
-	var filesName []string = getName(files)
+	var files []string = utils.GetAllFilesOrFolder("include", true)
+	var filesName []string = utils.GetName(files)
 
-	var mainFolder Folder = folderMaker("include")
+	var mainFolder function.Folder = function.FolderMaker("include")
 
 	for i := 0; i < len(files); i++ {
-		parseFiles(filesName[i], files[i], mainFolder)
+		function.ParseFiles(filesName[i], files[i], mainFolder)
 	}
 
-	parseFiles("index", "index.html", mainFolder)
+	function.ParseFiles("index", "index.html", mainFolder)
 
 	if len(args) > 0 {
 		argsString := strings.Join(args, "")
@@ -57,7 +60,7 @@ func main() {
 	-help: displays help
 	-l: launches the index.html`)
 		} else if strings.Contains(argsString, "l") {
-			openBrowser("html-docc/index.html")
+			utils.OpenBrowser("html-docc/index.html")
 		} else {
 			fmt.Println("Unknown command maybe you should try using the help command")
 		}

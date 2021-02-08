@@ -1,12 +1,38 @@
-package main
+package function
 
 import (
 	"io/ioutil"
+	"os"
 	"path"
 	"strings"
+	"text/template"
 
+	"github.com/Flowtter/docc/utils"
 	"github.com/gosimple/slug"
 )
+
+// PageData struct for html info
+type PageData struct {
+	PageTitle   string
+	FolderTitle string
+	MainFolder  Folder
+	Functions   []Function
+}
+
+// Folder for the left menu
+type Folder struct {
+	Name       string
+	Files      []File
+	SubFolders []Folder
+	First      bool
+}
+
+// File for the left menu
+type File struct {
+	Path string
+	HREF string
+	Slug string
+}
 
 // Function in C language
 type Function struct {
@@ -16,22 +42,22 @@ type Function struct {
 	Line        int
 }
 
-func getPostProcessedDescriptionOfFunction(endingLineIndex int, lines []string) string {
-	return postProcessingDescription(getDescriptionOfFunction(endingLineIndex, lines))
+func GetPostProcessedDescriptionOfFunction(endingLineIndex int, lines []string) string {
+	return PostProcessingDescription(GetDescriptionOfFunction(endingLineIndex, lines))
 }
 
-func getDescriptionOfFunction(endingLineIndex int, lines []string) string {
+func GetDescriptionOfFunction(endingLineIndex int, lines []string) string {
 	index := endingLineIndex - 1
 	if strings.Contains(lines[index], "//") {
 		return lines[index]
 	} else if strings.Contains(lines[index], "*/") {
-		_, result := containsStringInMultipleLines(index, "/*", lines)
+		_, result := utils.ContainsStringInMultipleLines(index, "/*", lines)
 		return result
 	}
 	return ""
 }
 
-func postProcessingDescription(comment string) string {
+func PostProcessingDescription(comment string) string {
 	comment = strings.ReplaceAll(comment, "/**", "")
 	comment = strings.ReplaceAll(comment, "/*", "")
 	comment = strings.ReplaceAll(comment, "*/", "")
@@ -40,7 +66,7 @@ func postProcessingDescription(comment string) string {
 	for i := 0; i < len(split); i++ {
 		for len(split[i]) > 0 {
 			if split[i][0] == ' ' || split[i][0] == '*' {
-				split[i] = trimFirstRune(split[i])
+				split[i] = utils.TrimFirstRune(split[i])
 			} else {
 				break
 			}
@@ -68,7 +94,7 @@ func postProcessingDescription(comment string) string {
 	return strings.Join(split, "\n")
 }
 
-func getAllFunctionsOfLines(lines []string, path string) []Function {
+func GetAllFunctionsOfLines(lines []string, path string) []Function {
 	var functions []Function
 	for index, line := range lines {
 		var isComment = false
@@ -89,10 +115,10 @@ func getAllFunctionsOfLines(lines []string, path string) []Function {
 					Prototype:   line,
 					Line:        index + 1,
 					Path:        path,
-					Description: getPostProcessedDescriptionOfFunction(index, lines),
+					Description: GetPostProcessedDescriptionOfFunction(index, lines),
 				})
 			} else {
-				startingLine, prototypeLong := containsStringInMultipleLines(index, "(", lines)
+				startingLine, prototypeLong := utils.ContainsStringInMultipleLines(index, "(", lines)
 				if startingLine == -1 {
 					break
 				}
@@ -100,7 +126,7 @@ func getAllFunctionsOfLines(lines []string, path string) []Function {
 					Prototype:   prototypeLong,
 					Line:        startingLine + 1,
 					Path:        path,
-					Description: getPostProcessedDescriptionOfFunction(index, lines),
+					Description: GetPostProcessedDescriptionOfFunction(index, lines),
 				})
 			}
 		}
@@ -108,7 +134,7 @@ func getAllFunctionsOfLines(lines []string, path string) []Function {
 	return functions
 }
 
-func folderMaker(path string) Folder {
+func FolderMaker(path string) Folder {
 	folder := Folder{
 		Name: path,
 	}
@@ -132,7 +158,7 @@ func (f *Folder) getFoldersRecursive(pth string) {
 			f.SubFolders = append(f.SubFolders, folder)
 		} else {
 			joined := path.Join(pth, all[i].Name())
-			fullName := getName([]string{joined})[0]
+			fullName := utils.GetName([]string{joined})[0]
 			f.Files = append(f.Files, File{
 				Slug: slug.Make(all[i].Name())[:len(all[i].Name())-2],
 				HREF: fullName + ".html",
@@ -140,4 +166,38 @@ func (f *Folder) getFoldersRecursive(pth string) {
 			})
 		}
 	}
+}
+
+func ParseHTML(pageData PageData, pathToSave, pathFunctionFile string) {
+	tmpl := template.Must(template.ParseFiles(path.Join("assets", "layout.html")))
+
+	lines := utils.GetAllLinesOfFile(pathFunctionFile)
+	if pageData.FolderTitle != "index" {
+		pageData.Functions = GetAllFunctionsOfLines(lines, pathFunctionFile)
+	}
+	f, err := os.Create(pathToSave)
+	defer f.Close()
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.Execute(f, pageData)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ParseFiles(name, pathFunctionFile string, mainFolder Folder) {
+	wd, err := os.Getwd()
+
+	if err != nil {
+		panic(err)
+	}
+	_, pageTitle := path.Split(wd)
+
+	pageData := PageData{
+		PageTitle:   strings.ToUpper(pageTitle),
+		FolderTitle: pathFunctionFile,
+		MainFolder:  mainFolder,
+	}
+	ParseHTML(pageData, path.Join(wd, "html-docc", name+".html"), pathFunctionFile)
 }

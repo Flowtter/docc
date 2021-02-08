@@ -5,3 +5,5 @@ html-docc/
 docc
 assets/debug.html
 assets/index.html
+api/
+ui/

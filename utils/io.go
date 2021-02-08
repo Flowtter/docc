@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"io/ioutil"
@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-func createFoldersIfDoesNotExist(folder string) bool {
-	if verifyFolders(folder) {
+func CreateFoldersIfDoesNotExist(folder string) bool {
+	if VerifyFolders(folder) {
 		return true
 	}
 	return createFolders(folder)
 }
 
-func verifyFolders(folder string) bool {
+func VerifyFolders(folder string) bool {
 	_, err := os.Stat(folder)
 	return !os.IsNotExist(err)
 }
@@ -23,7 +23,7 @@ func createFolders(folder string) bool {
 	return os.Mkdir(folder, 0755) == nil
 }
 
-func copyFile(src, dst string) {
+func CopyFile(src, dst string) {
 	input, err := ioutil.ReadFile(src)
 	if err != nil {
 		panic(err)
@@ -35,7 +35,7 @@ func copyFile(src, dst string) {
 	}
 }
 
-func isFolder(folder string) bool {
+func IsFolder(folder string) bool {
 	file, err := os.Stat(folder)
 	if err != nil {
 		return false
@@ -43,16 +43,16 @@ func isFolder(folder string) bool {
 	return file.Mode().IsDir()
 }
 
-func getAllLinesOfFile(path string) []string {
+func GetAllLinesOfFile(path string) []string {
 	file, _ := ioutil.ReadFile(path)
 	return strings.Split(strings.ReplaceAll(string(file), "\r", ""), "\n")
 }
 
-func getAllFilesOrFolder(folder string, wantFile bool) []string {
+func GetAllFilesOrFolder(folder string, wantFile bool) []string {
 	var files []string
 
 	err := filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
-		if wantFile == !isFolder(path) {
+		if wantFile == !IsFolder(path) {
 			files = append(files, path)
 		}
 		return nil

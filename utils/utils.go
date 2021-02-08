@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"fmt"
@@ -11,12 +11,12 @@ import (
 	"github.com/gosimple/slug"
 )
 
-func trimFirstRune(s string) string {
+func TrimFirstRune(s string) string {
 	_, i := utf8.DecodeRuneInString(s)
 	return s[i:]
 }
 
-func containsStringInMultipleLines(endingLineIndex int, startingString string, lines []string) (int, string) {
+func ContainsStringInMultipleLines(endingLineIndex int, startingString string, lines []string) (int, string) {
 	resultString := lines[endingLineIndex]
 
 	for index := endingLineIndex - 1; index > 0; index-- {
@@ -28,7 +28,7 @@ func containsStringInMultipleLines(endingLineIndex int, startingString string, l
 	return -1, ""
 }
 
-func openBrowser(url string) {
+func OpenBrowser(url string) {
 	var err error
 
 	switch runtime.GOOS {
@@ -44,7 +44,7 @@ func openBrowser(url string) {
 	}
 }
 
-func getName(files []string) []string {
+func GetName(files []string) []string {
 	var name []string
 	for i := 0; i < len(files); i++ {
 		tmpName := files[i]
