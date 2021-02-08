@@ -7,6 +7,8 @@ import (
 	"runtime"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/gosimple/slug"
 )
 
 func trimFirstRune(s string) string {
@@ -46,9 +48,11 @@ func getName(files []string) []string {
 	var name []string
 	for i := 0; i < len(files); i++ {
 		tmpName := files[i]
-		_, tmpName = path.Split(tmpName)
+		tmpFullName := strings.Split(tmpName, "/")
+		tmpFullName = tmpFullName[1:]
+		tmpName = path.Join(tmpFullName...)
 		tmpName = tmpName[:len(tmpName)-2]
-		name = append(name, tmpName)
+		name = append(name, slug.Make(tmpName))
 	}
 	return name
 }

@@ -132,9 +132,10 @@ func (f *Folder) getFoldersRecursive(pth string) {
 			f.SubFolders = append(f.SubFolders, folder)
 		} else {
 			joined := path.Join(pth, all[i].Name())
+			fullName := getName([]string{joined})[0]
 			f.Files = append(f.Files, File{
 				Slug: slug.Make(all[i].Name())[:len(all[i].Name())-2],
-				HREF: slug.Make(all[i].Name())[:len(all[i].Name())-2] + ".html",
+				HREF: fullName + ".html",
 				Path: joined,
 			})
 		}
