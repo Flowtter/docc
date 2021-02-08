@@ -1,12 +1,12 @@
 # Docc
-Docc is a CLI tool to create doc on c projects.
+Docc is a CLI tool to create **doc**umentation on **c** projects.
 
 ## Get started
 
 * go install github.com/Flowtter/docc
 * cd to a c project
-* docc `-l`
+* docc `l`
 
 ## Arguments
-* `-l` : open in browser
-* `-help` : display help
+* `l` : open in browser
+* `help` : display help
