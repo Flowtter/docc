@@ -113,6 +113,7 @@ func folderMaker(path string) Folder {
 		Name: path,
 	}
 	folder.getFoldersRecursive(path)
+	folder.First = true
 	return folder
 }
 
@@ -124,7 +125,8 @@ func (f *Folder) getFoldersRecursive(pth string) {
 	for i := 0; i < len(all); i++ {
 		if all[i].IsDir() {
 			folder := Folder{
-				Name: all[i].Name(),
+				Name:  all[i].Name(),
+				First: false,
 			}
 			folder.getFoldersRecursive(path.Join(pth, all[i].Name()))
 			f.SubFolders = append(f.SubFolders, folder)

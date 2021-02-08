@@ -20,14 +20,14 @@ type Folder struct {
 	Name       string
 	Files      []File
 	SubFolders []Folder
+	First      bool
 }
 
 // File for the left menu
 type File struct {
-	Path  string
-	HREF  string
-	Slug  string
-	First bool
+	Path string
+	HREF string
+	Slug string
 }
 
 func parseHTML(pageData PageData, pathToSave, pathFunctionFile string) {
